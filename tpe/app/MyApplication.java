@@ -10,31 +10,30 @@ public class MyApplication {
     public static void main(String[] args) {
 
         Message message = new Message();
-        message.setMessage("Siparişler kargoya verildi");
+        message.setMessage("Siparişiniz verildi");
 
-        // !! Config dosyamı gösterdim
+        // !!! Config dosyamı gösterdim
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(AppConfiguration.class);
 
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
+        // bean talep ediyoruz , interface yapısı olunca hangi child ı bean olarak oluşturacağını
+        // anlıyamadığı için exception fırlatır
+//        MessageService service = context.getBean(MessageService.class);
 
-    // bean talep ediyoruz, interface yapısı olunca hangi child'ı bean olarak oluşturacağını anlıyamadığı için
-        // exception fırlatır.
+        MessageService service = context.getBean("smsService", MessageService.class);
+//        MessageService service2 = context.getBean("mailService", MessageService.class);
 
-//    MessageService service = context.getBean(MessageService.class);
-
-    MessageService service = context.getBean("mailService", MessageService.class);
-    MessageService service2 = context.getBean("mailService", MessageService.class);
-
-    if (service==service2){
-        System.out.println("Aynı");
-    }else {
-        System.out.println("Farklı");
-    }
-
+//       if(service==service2) {
+//           System.out.println("Aynı");
+//       } else {
+//           System.out.println("Farklı");
+//       }
 
 
-    service.sendMessage(message);
 
-    context.close();  // programı kapatırken oluşan beanları yok ediyoruz.
+        service.sendMessage(message);
+
+        context.close(); // programı kapatorken oluşan beanleri yok ediyoruz.
 
     }
 }
